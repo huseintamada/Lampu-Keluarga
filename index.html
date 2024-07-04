@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.1/dist/flowbite.min.css" />
+  <title>CETRAK CETREK LAMPU SESI 4</title>
+  <style>
+    body { background-color: #1e1e1e; color: #e0e0e0; font-family: Arial, sans-serif; }
+    
+    .lamp-group { 
+      border: 2px solid #333; 
+      padding: 20px; 
+      border-radius: 12px; 
+      margin-bottom: 30px; 
+      background: #2d2d2d; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+      transition: transform 0.3s ease-in-out; 
+    }
+    
+    .lamp-group:hover { 
+      transform: scale(1.02); 
+    }
+    
+    .lamp-title { 
+      font-size: 1.5rem; 
+      font-weight: 700; 
+      margin-bottom: 15px; 
+      color: #f5f5f5; 
+    }
+    
+    .lamp-item { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      transition: background 0.3s ease, box-shadow 0.3s ease; 
+      padding: 10px; 
+      border-radius: 8px; 
+      background: #3c3c3c; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    }
+    
+    .lamp-item:hover { 
+      background: #4d4d4d; 
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); 
+    }
+    
+    .lamp-item img { 
+      width: 100px; 
+      height: 100px; 
+      border-radius: 8px; 
+      transition: opacity 0.3s ease; 
+    }
+    
+    .lamp-item img.on { 
+      opacity: 1; 
+    }
+    
+    .lamp-item img.off { 
+      opacity: 0.5; 
+    }
+    
+    .lamp-controls { 
+      margin-top: 15px; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    }
+    
+    .lamp-controls span { 
+      font-size: 1.125rem; 
+      font-weight: 600; 
+      color: #f5f5f5; 
+    }
+    
+    .toggle-switch { 
+      position: relative; 
+      display: inline-block; 
+      width: 60px; 
+      height: 34px; 
+    }
+    
+    .toggle-switch input { 
+      opacity: 0; 
+      width: 0; 
+      height: 0; 
+    }
+    
+    .slider { 
+      position: absolute; 
+      cursor: pointer; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      background-color: #ccc; 
+      transition: .4s; 
+      border-radius: 34px; 
+    }
+    
+    .slider:before { 
+      position: absolute; 
+      content: ""; 
+      height: 26px; 
+      width: 26px; 
+      border-radius: 50%; 
+      left: 4px; 
+      bottom: 4px; 
+      background-color: white; 
+      transition: .4s; 
+      transform: scale(1); 
+    }
+    
+    input:checked + .slider { 
+      background-color: #4caf50; 
+    }
+    
+    input:checked + .slider:before { 
+      transform: translateX(26px) scale(1.1); 
+    }
+    
+    .slider.round { 
+      border-radius: 34px; 
+    }
+    
+    .slider.round:before { 
+      border-radius: 50%; 
+    }
+    
+    @keyframes pulse { 
+      0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); } 
+      70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 
+      100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } 
+    }
+    
+    .lamp-item.active img { 
+      animation: pulse 1.5s infinite; 
+    }
+  </style>
+</head>
+<body>
+  <div class="flex flex-col items-center min-h-screen py-10">
+    <!-- Sakelar Global -->
+    <div class="lamp-group mb-10">
+      <div class="lamp-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="global-toggle" onchange="toggleAllLamps(this.checked)">
+          <span class="slider round"></span>
+        </label>
+        <span>Sakelar Global</span>
+      </div>
+    </div>
+
+    <!-- Ruangan Keluarga -->
+    <div class="lamp-group" id="keluarga">
+      <div class="lamp-title">Ruang Keluarga</div>
+      <div class="lamp-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="master-toggle-keluarga" onchange="toggleGroup('keluarga', this.checked)">
+          <span class="slider round"></span>
+        </label>
+        <span>Semua Sakelar Ruang Keluarga</span>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center">
+        <div class="lamp-item" id="lamp1-container">
+          <span>Lampu 1</span>
+          <img src="assets/images/off.gif" alt="Lampu 1" id="lampu1" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle1" onchange="toggleLamp('lamp1-container', 'lampu1', 'toggle1')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="lamp-item" id="lamp2-container">
+          <span>Lampu 2</span>
+          <img src="assets/images/off.gif" alt="Lampu 2" id="lampu2" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle2" onchange="toggleLamp('lamp2-container', 'lampu2', 'toggle2')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="lamp-item" id="lamp3-container">
+          <span>Lampu 3</span>
+          <img src="assets/images/off.gif" alt="Lampu 3" id="lampu3" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle3" onchange="toggleLamp('lamp3-container', 'lampu3', 'toggle3')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ruangan Makan -->
+    <div class="lamp-group" id="makan">
+      <div class="lamp-title">Ruang Makan</div>
+      <div class="lamp-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="master-toggle-makan" onchange="toggleGroup('makan', this.checked)">
+          <span class="slider round"></span>
+        </label>
+        <span>Semua Sakelar Ruang Makan</span>
+      </div>
+      <div class="lamp-item" id="lamp4-container">
+        <span>Lampu 4</span>
+        <img src="assets/images/off.gif" alt="Lampu 4" id="lampu4" class="off" />
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle4" onchange="toggleLamp('lamp4-container', 'lampu4', 'toggle4')">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Ruangan Tidur -->
+    <div class="lamp-group" id="tidur">
+      <div class="lamp-title">Ruang Tidur</div>
+      <div class="lamp-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="master-toggle-tidur" onchange="toggleGroup('tidur', this.checked)">
+          <span class="slider round"></span>
+        </label>
+        <span>Semua Sakelar Ruang Tidur</span>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center">
+        <div class="lamp-item" id="lamp5-container">
+          <span>Lampu 5</span>
+          <img src="assets/images/off.gif" alt="Lampu 5" id="lampu5" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle5" onchange="toggleLamp('lamp5-container', 'lampu5', 'toggle5')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="lamp-item" id="lamp6-container">
+          <span>Lampu 6</span>
+          <img src="assets/images/off.gif" alt="Lampu 6" id="lampu6" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle6" onchange="toggleLamp('lamp6-container', 'lampu6', 'toggle6')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ruangan Kerja -->
+    <div class="lamp-group" id="kerja">
+      <div class="lamp-title">Ruang Kerja</div>
+      <div class="lamp-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="master-toggle-kerja" onchange="toggleGroup('kerja', this.checked)">
+          <span class="slider round"></span>
+        </label>
+        <span>Semua Sakelar Ruang Kerja</span>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center">
+        <div class="lamp-item" id="lamp7-container">
+          <span>Lampu 7</span>
+          <img src="assets/images/off.gif" alt="Lampu 7" id="lampu7" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle7" onchange="toggleLamp('lamp7-container', 'lampu7', 'toggle7')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="lamp-item" id="lamp8-container">
+          <span>Lampu 8</span>
+          <img src="assets/images/off.gif" alt="Lampu 8" id="lampu8" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle8" onchange="toggleLamp('lamp8-container', 'lampu8', 'toggle8')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ruangan Tamu -->
+    <div class="lamp-group" id="tamu">
+      <div class="lamp-title">Ruang Tamu</div>
+      <div class="lamp-controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="master-toggle-tamu" onchange="toggleGroup('tamu', this.checked)">
+          <span class="slider round"></span>
+        </label>
+        <span>Semua Sakelar Ruang Tamu</span>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center">
+        <div class="lamp-item" id="lamp9-container">
+          <span>Lampu 9</span>
+          <img src="assets/images/off.gif" alt="Lampu 9" id="lampu9" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle9" onchange="toggleLamp('lamp9-container', 'lampu9', 'toggle9')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="lamp-item" id="lamp10-container">
+          <span>Lampu 10</span>
+          <img src="assets/images/off.gif" alt="Lampu 10" id="lampu10" class="off" />
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle10" onchange="toggleLamp('lamp10-container', 'lampu10', 'toggle10')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
+  <script src="saklar.js" type="application/javascript"></script>
+</body>
+</html>
